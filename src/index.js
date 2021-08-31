@@ -51,7 +51,7 @@ class Board extends React.Component {
 			return coords;
 		})(this.state.gridWidth);
 
-		let squareNumber = 0;
+		let squareNumber = -1;
 
 		return (
 			<div>
@@ -184,7 +184,6 @@ ReactDOM.render(
 
 
 function calculateWinner(squares) {
-
 	const lines = [
 		[0, 1, 2],
 		[3, 4, 5],
@@ -205,7 +204,6 @@ function calculateWinner(squares) {
 }
 
 function determineCoordinates(squareNumericValue) {
-
 	const cols = [
 		[0,3,6],
 		[1,4,7],
