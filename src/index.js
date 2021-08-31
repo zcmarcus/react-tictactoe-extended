@@ -167,10 +167,20 @@ class Game extends React.Component {
 					/>
 				</div>
 				<div className="game-info">
-					<div>{status}</div>
+					<div className="section-title">{status}</div>
+					<hr/>
 					<ol>{moves}</ol>
 				</div>
+				<div className="vertical-divider"></div>
+				<div className="game-controls">
+					<div className="section-title">Controls</div>
+					<hr/>
+					<ol className="game-controls-list">
+						<li><button className="control-button">Regular Sort</button></li>
+					</ol>
+				</div>
 			</div>
+
 		);
 	}
 }
@@ -184,6 +194,7 @@ ReactDOM.render(
 
 
 function calculateWinner(squares) {
+
 	const lines = [
 		[0, 1, 2],
 		[3, 4, 5],
@@ -204,6 +215,7 @@ function calculateWinner(squares) {
 }
 
 function determineCoordinates(squareNumericValue) {
+	
 	const cols = [
 		[0,3,6],
 		[1,4,7],

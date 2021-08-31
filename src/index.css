@@ -5,7 +5,11 @@ body {
 
 ol,
 ul {
-  padding-left: 30px;
+  padding-left: 0;
+}
+
+.game-controls-list {
+  list-style: none;
 }
 
 .board-row:after {
@@ -50,6 +54,25 @@ ul {
   margin-left: 20px;
 }
 
+.game-info,
+.game-controls {
+  padding: 10px;
+}
+
+.control-button {
+  background-color: rgb(182, 231, 169);
+}
+
 .bold-move {
   font-weight: bold;
+}
+
+.section-title {
+  text-align: center;
+}
+
+.vertical-divider {
+  height: 50vh;
+  max-height: 50vh;
+  border: 2px double black;
 }
