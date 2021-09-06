@@ -255,6 +255,7 @@ function determineCoordinates(squareNumericValue) {
 	return [xCoordinate,yCoordinate];
 }
 
+// Style individual square's borders to produce appropriate border lines on gameboard
 function assignBorderClass(squareNumber) {
 	let borderClass;
 	switch (squareNumber) {
