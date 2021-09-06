@@ -9,6 +9,7 @@ import './index.css';
 		// DONE: Display the location for each move in the format (col, row) in the move history list.
 		// DONE: Bold the currently selected item in the move list.
 		// DONE: Rewrite Board to use two loops to make the squares instead of hardcoding them.
+		TODO: Add hover effect showing next game marker (X or O) to be laid.
 		TODO: Add a toggle button that lets you sort the moves in either ascending or descending order.
 	    TODO: When someone wins, highlight the three squares that caused the win.
 		TODO: When no one wins, display a message about the result being a draw.
@@ -16,7 +17,7 @@ import './index.css';
 
 function Square(props) {
 	return (
-		<button className="square" onClick={props.onClick}>
+		<button className={"square " + props.hoverClass + " " + props.borderClass} onClick={props.onClick}>
 			{props.value}
 		</button>
 	);
@@ -31,11 +32,15 @@ class Board extends React.Component {
 	}
 
 	renderSquare(i) {
+		let borderClass = assignBorderClass(i);
+
 		return (
 			<Square 
 				key={i}
 				value={this.props.squares[i]} 
 				onClick={() => this.props.onClick(i)}
+				hoverClass={(this.props.squares[i] == null) ? this.props.hoverClass : "hover-none"}
+				borderClass = {borderClass}
 			/>
 		);
 	}
@@ -60,7 +65,7 @@ class Board extends React.Component {
 					gridWidthCoordinates.map( (row) => { 
 						return <div key={row} className="board-row">
 							{
-								// create squares (buttons) in row
+								// create squares in row
 								gridWidthCoordinates.map( (col) => {
 									squareNumber++;
 									return this.renderSquare(squareNumber);
@@ -152,22 +157,26 @@ class Game extends React.Component {
 		});
 
 		let status;
+		let hoverClass;
 		if (winner) {
 			status = 'Winner: ' + winner;
+			hoverClass = "hover-none";
 		} else {
 			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+			hoverClass = this.state.xIsNext ? 'hover-x' : 'hover-o';
 		}
 
 		return (
 			<div className="game">
 				<div className="game-board">
 					<Board 
+						hoverClass={hoverClass}
 						squares={current.squares}
 						onClick={(i) => this.handleClick(i)}
 					/>
 				</div>
 				<div className="game-info">
-					<div className="section-title">{status}</div>
+					<div id="status" className="section-title">{status}</div>
 					<hr/>
 					<ol>{moves}</ol>
 				</div>
@@ -248,5 +257,42 @@ function determineCoordinates(squareNumericValue) {
 
 
 	return [xCoordinate,yCoordinate];
+}
+
+function assignBorderClass(squareNumber) {
+	let borderClass;
+	switch (squareNumber) {
+		case 0: 
+			borderClass = 'border-rb';
+			break;
+		case 1:
+			borderClass = 'border-rbl';
+			break;
+		case 2: 
+			borderClass = 'border-bl';
+			break;
+		case 3:
+			borderClass = 'border-tbr';
+			break;
+		case 4: 
+			borderClass = 'border-all';
+			break;
+		case 5:
+			borderClass = 'border-tbl';
+			break;
+		case 6: 
+			borderClass = 'border-tr';
+			break;
+		case 7:
+			borderClass = 'border-trl';
+			break;
+		case 8: 
+			borderClass = 'border-tl';
+			break;
+		default: 
+			borderClass = 'border-all';
+	}
+
+	return borderClass;
 }
 
