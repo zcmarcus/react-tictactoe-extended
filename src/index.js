@@ -9,7 +9,7 @@ import './index.css';
 		// DONE: Display the location for each move in the format (col, row) in the move history list.
 		// DONE: Bold the currently selected item in the move list.
 		// DONE: Rewrite Board to use two loops to make the squares instead of hardcoding them.
-		TODO: Add hover effect showing next game marker (X or O) to be laid.
+		// TODO: Add hover effect showing next game marker (X or O) to be laid.
 		TODO: Add a toggle button that lets you sort the moves in either ascending or descending order.
 	    TODO: When someone wins, highlight the three squares that caused the win.
 		TODO: When no one wins, display a message about the result being a draw.
@@ -90,12 +90,12 @@ class Game extends React.Component {
 			}],
 			stepNumber: 0,
 			xIsNext: true,
-			boldMove: false
+			boldMove: false,
+			reverseSortMoves: false
 		};
 	}
 
-	handleClick(i) {
-		
+	handleClick(i) {		
 		const history = this.state.history.slice(0, this.state.stepNumber + 1);
 		const current = history[history.length - 1];
 		const squares = current.squares.slice();
@@ -121,6 +121,12 @@ class Game extends React.Component {
 		this.setState({
 			stepNumber: step,
 			xIsNext: (step % 2) === 0,
+		})
+	}
+
+	invertMoveSorting(reverseSortMoves = false) {
+		this.setState({
+			reverseSortMoves: !reverseSortMoves
 		})
 	}
 
@@ -152,6 +158,9 @@ class Game extends React.Component {
 			)
 		});
 
+
+		const movesReverseOrder = moves.slice().reverse();
+
 		let status;
 		let hoverClass;
 		if (winner) {
@@ -161,6 +170,8 @@ class Game extends React.Component {
 			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 			hoverClass = this.state.xIsNext ? 'hover-x' : 'hover-o';
 		}
+
+		let sortOrderButtonText = this.state.reverseSortMoves ? 'Sort Moves Normally' : 'Reverse Sort Moves';
 
 		return (
 			<div className="game">
@@ -174,14 +185,21 @@ class Game extends React.Component {
 				<div className="game-info">
 					<div id="status" className="section-title">{status}</div>
 					<hr/>
-					<ol>{moves}</ol>
+					<ol reversed={this.state.reverseSortMoves}>
+						{(this.state.reverseSortMoves) ? movesReverseOrder : moves}
+					</ol>
 				</div>
 				<div className="vertical-divider"></div>
 				<div className="game-controls">
 					<div className="section-title">Controls</div>
 					<hr/>
 					<ol className="game-controls-list">
-						<li><button className="control-button">Regular Sort</button></li>
+						<li><button
+								className="control-button" 
+								onClick={() => this.invertMoveSorting(this.state.reverseSortMoves)}
+							>
+							{sortOrderButtonText}</button>
+						</li>
 					</ol>
 				</div>
 			</div>
