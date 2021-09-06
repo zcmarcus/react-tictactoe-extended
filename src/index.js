@@ -61,11 +61,11 @@ class Board extends React.Component {
 		return (
 			<div>
 				{	
-					// create gameboard rows
+					// draw gameboard rows
 					gridWidthCoordinates.map( (row) => { 
 						return <div key={row} className="board-row">
 							{
-								// create squares in row
+								// draw squares in row
 								gridWidthCoordinates.map( (col) => {
 									squareNumber++;
 									return this.renderSquare(squareNumber);
@@ -137,15 +137,11 @@ class Game extends React.Component {
 				? 'Go to move #' + move + ' (' + xCoordinate + ', ' + yCoordinate + ')'
 				: 'Go to game start';
 
-			let boldMove = '';
-			switch (this.state.stepNumber) {
-				case move:
-					boldMove = 'bold-move'
-					break;
-				default:
-					boldMove = '';
-					break;
-			}
+
+			let boldMove = (move === this.state.stepNumber) 
+					? 'bold-move'
+					: '';
+
 			return (
 				<li key={move}>
 					<button 
