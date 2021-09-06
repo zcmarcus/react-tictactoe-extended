@@ -9,14 +9,15 @@ import './index.css';
 		// DONE: Display the location for each move in the format (col, row) in the move history list.
 		// DONE: Bold the currently selected item in the move list.
 		// DONE: Rewrite Board to use two loops to make the squares instead of hardcoding them.
-		TODO: Add a toggle button that lets you sort the moves in either ascending or descending order.
+		// DONE: Add hover effect showing next game marker (X or O) to be laid.
+		// DONE: Add a toggle button that lets you sort the moves in either ascending or descending order.
 	    TODO: When someone wins, highlight the three squares that caused the win.
 		TODO: When no one wins, display a message about the result being a draw.
 */
 
 function Square(props) {
 	return (
-		<button className="square" onClick={props.onClick}>
+		<button className={"square " + props.hoverClass + " " + props.borderClass} onClick={props.onClick}>
 			{props.value}
 		</button>
 	);
@@ -31,11 +32,15 @@ class Board extends React.Component {
 	}
 
 	renderSquare(i) {
+		let borderClass = assignBorderClass(i);
+
 		return (
 			<Square 
 				key={i}
 				value={this.props.squares[i]} 
 				onClick={() => this.props.onClick(i)}
+				hoverClass={(this.props.squares[i] == null) ? this.props.hoverClass : "hover-none"}
+				borderClass = {borderClass}
 			/>
 		);
 	}
@@ -56,11 +61,11 @@ class Board extends React.Component {
 		return (
 			<div>
 				{	
-					// create gameboard rows
+					// draw gameboard rows
 					gridWidthCoordinates.map( (row) => { 
 						return <div key={row} className="board-row">
 							{
-								// create squares (buttons) in row
+								// draw squares in row
 								gridWidthCoordinates.map( (col) => {
 									squareNumber++;
 									return this.renderSquare(squareNumber);
@@ -85,12 +90,12 @@ class Game extends React.Component {
 			}],
 			stepNumber: 0,
 			xIsNext: true,
-			boldMove: false
+			boldMove: false,
+			reverseSortMoves: false
 		};
 	}
 
-	handleClick(i) {
-		
+	handleClick(i) {		
 		const history = this.state.history.slice(0, this.state.stepNumber + 1);
 		const current = history[history.length - 1];
 		const squares = current.squares.slice();
@@ -119,6 +124,12 @@ class Game extends React.Component {
 		})
 	}
 
+	invertMoveSorting(reverseSortMoves = false) {
+		this.setState({
+			reverseSortMoves: !reverseSortMoves
+		})
+	}
+
 	render() {
 		const history = this.state.history;
 		const current = history[this.state.stepNumber];
@@ -132,15 +143,11 @@ class Game extends React.Component {
 				? 'Go to move #' + move + ' (' + xCoordinate + ', ' + yCoordinate + ')'
 				: 'Go to game start';
 
-			let boldMove = '';
-			switch (this.state.stepNumber) {
-				case move:
-					boldMove = 'bold-move'
-					break;
-				default:
-					boldMove = '';
-					break;
-			}
+
+			let boldMove = (move === this.state.stepNumber) 
+					? 'bold-move'
+					: '';
+
 			return (
 				<li key={move}>
 					<button 
@@ -151,26 +158,52 @@ class Game extends React.Component {
 			)
 		});
 
+
+		const movesReverseOrder = moves.slice().reverse();
+
 		let status;
+		let hoverClass;
 		if (winner) {
 			status = 'Winner: ' + winner;
+			hoverClass = "hover-none";
 		} else {
 			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+			hoverClass = this.state.xIsNext ? 'hover-x' : 'hover-o';
 		}
+
+		let sortOrderButtonText = this.state.reverseSortMoves ? 'Sort Moves Normally' : 'Reverse Sort Moves';
 
 		return (
 			<div className="game">
 				<div className="game-board">
 					<Board 
+						hoverClass={hoverClass}
 						squares={current.squares}
 						onClick={(i) => this.handleClick(i)}
 					/>
 				</div>
 				<div className="game-info">
-					<div>{status}</div>
-					<ol>{moves}</ol>
+					<div id="status" className="section-title">{status}</div>
+					<hr/>
+					<ol reversed={this.state.reverseSortMoves}>
+						{(this.state.reverseSortMoves) ? movesReverseOrder : moves}
+					</ol>
+				</div>
+				<div className="vertical-divider"></div>
+				<div className="game-controls">
+					<div className="section-title">Controls</div>
+					<hr/>
+					<ol className="game-controls-list">
+						<li><button
+								className="control-button" 
+								onClick={() => this.invertMoveSorting(this.state.reverseSortMoves)}
+							>
+							{sortOrderButtonText}</button>
+						</li>
+					</ol>
 				</div>
 			</div>
+
 		);
 	}
 }
@@ -184,6 +217,7 @@ ReactDOM.render(
 
 
 function calculateWinner(squares) {
+
 	const lines = [
 		[0, 1, 2],
 		[3, 4, 5],
@@ -204,6 +238,7 @@ function calculateWinner(squares) {
 }
 
 function determineCoordinates(squareNumericValue) {
+	
 	const cols = [
 		[0,3,6],
 		[1,4,7],
@@ -236,5 +271,43 @@ function determineCoordinates(squareNumericValue) {
 
 
 	return [xCoordinate,yCoordinate];
+}
+
+// Style individual square's borders to produce appropriate border lines on gameboard
+function assignBorderClass(squareNumber) {
+	let borderClass;
+	switch (squareNumber) {
+		case 0: 
+			borderClass = 'border-rb';
+			break;
+		case 1:
+			borderClass = 'border-rbl';
+			break;
+		case 2: 
+			borderClass = 'border-bl';
+			break;
+		case 3:
+			borderClass = 'border-tbr';
+			break;
+		case 4: 
+			borderClass = 'border-all';
+			break;
+		case 5:
+			borderClass = 'border-tbl';
+			break;
+		case 6: 
+			borderClass = 'border-tr';
+			break;
+		case 7:
+			borderClass = 'border-trl';
+			break;
+		case 8: 
+			borderClass = 'border-tl';
+			break;
+		default: 
+			borderClass = 'border-all';
+	}
+
+	return borderClass;
 }
 

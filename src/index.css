@@ -5,7 +5,11 @@ body {
 
 ol,
 ul {
-  padding-left: 30px;
+  padding-left: 0;
+}
+
+.game-controls-list {
+  list-style: none;
 }
 
 .board-row:after {
@@ -20,7 +24,7 @@ ul {
 
 .square {
   background: #fff;
-  border: 1px solid #999;
+  border: none;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -37,6 +41,81 @@ ul {
   outline: none;
 }
 
+/* Individual square borders 
+that form hash markings for game board */
+.border-rb {
+  border-right: 1px solid #999;
+  border-bottom: 1px solid #999;
+}
+
+button.square.border-rbl {
+  border-right: 1px solid #999;
+  border-bottom: 1px solid #999;
+  border-left: 1px solid #999;
+}
+
+.border-bl {
+  border-bottom: 1px solid #999;
+  border-left: 1px solid #999;
+}
+
+.border-tbr {
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  border-right: 1px solid #999;
+}
+
+.border-all {
+  border: 1px solid #999;
+  border-collapse: collapse;
+}
+
+.border-tbl {
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  border-left: 1px solid #999;
+}
+
+.border-tr {
+  border-top: 1px solid #999;
+  border-right: 1px solid #999;
+}
+
+.border-trl {
+  border-top: 1px solid #999;
+  border-right: 1px solid #999;
+  border-left: 1px solid #999;
+}
+
+.border-tl {
+  border-top: 1px solid #999;
+  border-left: 1px solid #999;
+}
+
+@keyframes pulse-animation {
+  0% {
+    color: rgba(0, 0, 0, 0.1);
+  }
+
+  50% {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  100% {
+    color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.hover-x:hover::after {
+  animation: pulse-animation 750ms infinite;
+  content: "X";
+}
+
+.hover-o:hover::after {
+  animation: pulse-animation 750ms infinite;
+  content: "O";
+}
+
 .kbd-navigation .square:focus {
   background: #ddd;
 }
@@ -50,6 +129,25 @@ ul {
   margin-left: 20px;
 }
 
+.game-info,
+.game-controls {
+  padding: 10px;
+}
+
+.control-button {
+  background-color: rgb(182, 231, 169);
+}
+
 .bold-move {
   font-weight: bold;
+}
+
+.section-title {
+  text-align: center;
+}
+
+.vertical-divider {
+  height: 50vh;
+  max-height: 50vh;
+  border: 0.5px solid rgb(138, 138, 138);
 }
