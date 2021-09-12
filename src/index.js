@@ -17,8 +17,12 @@ import './index.css';
 
 function Square(props) {
 	return (
-		<button className={"square " + props.hoverClass + " " + props.borderClass} onClick={props.onClick}>
-			{props.value}
+		<button 
+			className={"square " + props.hoverClass + " " + props.borderClass + " " + props.highlightClass} 
+			onClick={props.onClick}
+			data-coordinates={props.coordinates}
+		>
+		{props.value}
 		</button>
 	);
 }
@@ -32,15 +36,19 @@ class Board extends React.Component {
 	}
 
 	renderSquare(i) {
-		let borderClass = assignBorderClass(i);
 
+		let borderClass = assignBorderClass(i);
+		let highlightClass = ((this.props.winningSquares) && this.props.winningSquares.includes(i)) 
+				? 'highlight'
+				: '';
 		return (
 			<Square 
 				key={i}
 				value={this.props.squares[i]} 
 				onClick={() => this.props.onClick(i)}
 				hoverClass={(this.props.squares[i] == null) ? this.props.hoverClass : "hover-none"}
-				borderClass = {borderClass}
+				borderClass={borderClass}
+				highlightClass={highlightClass}
 			/>
 		);
 	}
@@ -68,7 +76,7 @@ class Board extends React.Component {
 								// draw squares in row
 								gridWidthCoordinates.map( (col) => {
 									squareNumber++;
-									return this.renderSquare(squareNumber);
+									return this.renderSquare(squareNumber, col, row);
 								})
 							}
 
@@ -91,7 +99,7 @@ class Game extends React.Component {
 			stepNumber: 0,
 			xIsNext: true,
 			boldMove: false,
-			reverseSortMoves: false
+			reverseSortMoves: false,
 		};
 	}
 
@@ -163,7 +171,9 @@ class Game extends React.Component {
 
 		let status;
 		let hoverClass;
+		let winningSquares;
 		if (winner) {
+			winningSquares = calculateWinningSquares(current.squares);
 			status = 'Winner: ' + winner;
 			hoverClass = "hover-none";
 		} else {
@@ -180,6 +190,7 @@ class Game extends React.Component {
 						hoverClass={hoverClass}
 						squares={current.squares}
 						onClick={(i) => this.handleClick(i)}
+						winningSquares={winningSquares}
 					/>
 				</div>
 				<div className="game-info">
@@ -234,6 +245,32 @@ function calculateWinner(squares) {
 		const [a, b, c] = lines[i];
 		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
 			return squares[a]
+		}
+	}
+	return null
+}
+
+function calculateWinningSquares(squares) {
+
+	const lines = [
+
+		[0, 1, 2], /* Horizontal winning lines */
+		[3, 4, 5], 
+		[6, 7, 8],  
+		[0, 3, 6], /* Vertical winning lines */
+		[1, 4, 7],
+		[2, 5, 8],
+		[0, 4, 8], /* Diagonal winning lines */
+		[2, 4, 6],
+	];
+
+	let winningSquares = []
+
+	for (let i = 0; i < lines.length; i++) {
+		const [a, b, c] = lines[i];
+		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+			winningSquares = [a, b, c];
+			return winningSquares;
 		}
 	}
 	return null
