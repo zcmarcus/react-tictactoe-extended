@@ -12,7 +12,7 @@ import './index.css';
 		// DONE: Add hover effect showing next game marker (X or O) to be laid.
 		// DONE: Add a toggle button that lets you sort the moves in either ascending or descending order.
 	    // TODO: When someone wins, highlight the three squares that caused the win.
-		TODO: Clean up repeated code in calculateWinner() and calculateWinningSquares()
+		// TODO: Clean up repeated code in calculateWinner() and calculateWinningSquares()
 		TODO: When no one wins, display a message about the result being a draw.
 */
 
