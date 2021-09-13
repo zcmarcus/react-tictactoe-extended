@@ -11,14 +11,19 @@ import './index.css';
 		// DONE: Rewrite Board to use two loops to make the squares instead of hardcoding them.
 		// DONE: Add hover effect showing next game marker (X or O) to be laid.
 		// DONE: Add a toggle button that lets you sort the moves in either ascending or descending order.
-	    TODO: When someone wins, highlight the three squares that caused the win.
+	    // TODO: When someone wins, highlight the three squares that caused the win.
+		// TODO: Clean up repeated code in calculateWinner() and calculateWinningSquares()
 		TODO: When no one wins, display a message about the result being a draw.
 */
 
 function Square(props) {
 	return (
-		<button className={"square " + props.hoverClass + " " + props.borderClass} onClick={props.onClick}>
-			{props.value}
+		<button 
+			className={"square " + props.hoverClass + " " + props.borderClass + " " + props.highlightClass} 
+			onClick={props.onClick}
+			data-coordinates={props.coordinates}
+		>
+		{props.value}
 		</button>
 	);
 }
@@ -32,15 +37,19 @@ class Board extends React.Component {
 	}
 
 	renderSquare(i) {
-		let borderClass = assignBorderClass(i);
 
+		let borderClass = assignBorderClass(i);
+		let highlightClass = ((this.props.winningSquares) && this.props.winningSquares.includes(i)) 
+				? 'highlight'
+				: '';
 		return (
 			<Square 
 				key={i}
 				value={this.props.squares[i]} 
 				onClick={() => this.props.onClick(i)}
 				hoverClass={(this.props.squares[i] == null) ? this.props.hoverClass : "hover-none"}
-				borderClass = {borderClass}
+				borderClass={borderClass}
+				highlightClass={highlightClass}
 			/>
 		);
 	}
@@ -68,7 +77,7 @@ class Board extends React.Component {
 								// draw squares in row
 								gridWidthCoordinates.map( (col) => {
 									squareNumber++;
-									return this.renderSquare(squareNumber);
+									return this.renderSquare(squareNumber, col, row);
 								})
 							}
 
@@ -91,8 +100,9 @@ class Game extends React.Component {
 			stepNumber: 0,
 			xIsNext: true,
 			boldMove: false,
-			reverseSortMoves: false
+			reverseSortMoves: false,
 		};
+
 	}
 
 	handleClick(i) {		
@@ -163,7 +173,9 @@ class Game extends React.Component {
 
 		let status;
 		let hoverClass;
+		let winningSquares;
 		if (winner) {
+			winningSquares = calculateWinningSquares(current.squares);
 			status = 'Winner: ' + winner;
 			hoverClass = "hover-none";
 		} else {
@@ -180,6 +192,7 @@ class Game extends React.Component {
 						hoverClass={hoverClass}
 						squares={current.squares}
 						onClick={(i) => this.handleClick(i)}
+						winningSquares={winningSquares}
 					/>
 				</div>
 				<div className="game-info">
@@ -215,11 +228,9 @@ ReactDOM.render(
 	document.getElementById('root')
 );
 
+function getWinningLineDefinitions() {
 
-function calculateWinner(squares) {
-
-	const lines = [
-
+	const winningLineDefinitions = [
 		[0, 1, 2], /* Horizontal winning lines */
 		[3, 4, 5], 
 		[6, 7, 8],  
@@ -230,10 +241,30 @@ function calculateWinner(squares) {
 		[2, 4, 6],
 	];
 
+	return winningLineDefinitions;
+}
+
+function calculateWinner(squares) {
+
+	const lines = getWinningLineDefinitions();
+
 	for (let i = 0; i < lines.length; i++) {
 		const [a, b, c] = lines[i];
 		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
 			return squares[a]
+		}
+	}
+	return null
+}
+
+function calculateWinningSquares(squares) {
+
+	const lines = getWinningLineDefinitions();
+
+	for (let i = 0; i < lines.length; i++) {
+		const [a, b, c] = lines[i];
+		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+			return [a, b, c];
 		}
 	}
 	return null

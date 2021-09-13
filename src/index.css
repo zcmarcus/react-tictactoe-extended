@@ -116,6 +116,10 @@ button.square.border-rbl {
   content: "O";
 }
 
+.highlight {
+  background-color: rgb(255, 185, 232);
+}
+
 .kbd-navigation .square:focus {
   background: #ddd;
 }
