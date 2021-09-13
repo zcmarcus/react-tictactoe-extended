@@ -11,7 +11,8 @@ import './index.css';
 		// DONE: Rewrite Board to use two loops to make the squares instead of hardcoding them.
 		// DONE: Add hover effect showing next game marker (X or O) to be laid.
 		// DONE: Add a toggle button that lets you sort the moves in either ascending or descending order.
-	    TODO: When someone wins, highlight the three squares that caused the win.
+	    // TODO: When someone wins, highlight the three squares that caused the win.
+		TODO: Clean up repeated code in calculateWinner() and calculateWinningSquares()
 		TODO: When no one wins, display a message about the result being a draw.
 */
 
@@ -101,6 +102,7 @@ class Game extends React.Component {
 			boldMove: false,
 			reverseSortMoves: false,
 		};
+
 	}
 
 	handleClick(i) {		
@@ -226,11 +228,9 @@ ReactDOM.render(
 	document.getElementById('root')
 );
 
+function getWinningLineDefinitions() {
 
-function calculateWinner(squares) {
-
-	const lines = [
-
+	const winningLineDefinitions = [
 		[0, 1, 2], /* Horizontal winning lines */
 		[3, 4, 5], 
 		[6, 7, 8],  
@@ -240,6 +240,13 @@ function calculateWinner(squares) {
 		[0, 4, 8], /* Diagonal winning lines */
 		[2, 4, 6],
 	];
+
+	return winningLineDefinitions;
+}
+
+function calculateWinner(squares) {
+
+	const lines = getWinningLineDefinitions();
 
 	for (let i = 0; i < lines.length; i++) {
 		const [a, b, c] = lines[i];
@@ -252,25 +259,12 @@ function calculateWinner(squares) {
 
 function calculateWinningSquares(squares) {
 
-	const lines = [
-
-		[0, 1, 2], /* Horizontal winning lines */
-		[3, 4, 5], 
-		[6, 7, 8],  
-		[0, 3, 6], /* Vertical winning lines */
-		[1, 4, 7],
-		[2, 5, 8],
-		[0, 4, 8], /* Diagonal winning lines */
-		[2, 4, 6],
-	];
-
-	let winningSquares = []
+	const lines = getWinningLineDefinitions();
 
 	for (let i = 0; i < lines.length; i++) {
 		const [a, b, c] = lines[i];
 		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-			winningSquares = [a, b, c];
-			return winningSquares;
+			return [a, b, c];
 		}
 	}
 	return null
