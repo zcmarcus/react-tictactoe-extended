@@ -13,7 +13,7 @@ import './index.css';
 		// DONE: Add a toggle button that lets you sort the moves in either ascending or descending order.
 	    // TODO: When someone wins, highlight the three squares that caused the win.
 		// TODO: Clean up repeated code in calculateWinner() and calculateWinningSquares()
-		TODO: When no one wins, display a message about the result being a draw.
+		// TODO: When no one wins, display a message about the result being a draw.
 */
 
 function Square(props) {
@@ -143,6 +143,7 @@ class Game extends React.Component {
 	render() {
 		const history = this.state.history;
 		const current = history[this.state.stepNumber];
+
 		const winner = calculateWinner(current.squares);
 
 		const moves = history.map((step,move) => {
@@ -178,6 +179,8 @@ class Game extends React.Component {
 			winningSquares = calculateWinningSquares(current.squares);
 			status = 'Winner: ' + winner;
 			hoverClass = "hover-none";
+		} else if (determineIfDraw(current.squares)) {
+			status = 'Draw!'
 		} else {
 			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 			hoverClass = this.state.xIsNext ? 'hover-x' : 'hover-o';
@@ -254,6 +257,8 @@ function calculateWinner(squares) {
 			return squares[a]
 		}
 	}
+	// check for now winner
+	for (let i in squares)
 	return null
 }
 
@@ -268,6 +273,22 @@ function calculateWinningSquares(squares) {
 		}
 	}
 	return null
+}
+
+function determineIfDraw(squares) {
+
+	let emptySquaresRemain = false;
+	for (let i in squares) {
+		if (squares[i] === null) {
+			emptySquaresRemain = true;
+		}
+	}
+
+	if (emptySquaresRemain === false) {
+		return true;
+	}
+
+	return false;
 }
 
 function determineCoordinates(squareNumericValue) {
