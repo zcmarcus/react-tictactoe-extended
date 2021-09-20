@@ -11,9 +11,14 @@ import './index.css';
 		// DONE: Rewrite Board to use two loops to make the squares instead of hardcoding them.
 		// DONE: Add hover effect showing next game marker (X or O) to be laid.
 		// DONE: Add a toggle button that lets you sort the moves in either ascending or descending order.
-	    // TODO: When someone wins, highlight the three squares that caused the win.
-		// TODO: Clean up repeated code in calculateWinner() and calculateWinningSquares()
-		// TODO: When no one wins, display a message about the result being a draw.
+	    // DONE: When someone wins, highlight the three squares that caused the win.
+		// DONE: Clean up repeated code in calculateWinner() and calculateWinningSquares()
+		// DONE: When no one wins, display a message about the result being a draw.
+		// TODO: Save and display gameplay stats.
+		// TODO: Add Player vs Computer mode (implement AI algorithm).
+		// TODO: Update styling and make mobile-friendly.
+		// TODO: (Optional) Sound effects (place x, place o, x wins, o wins, draw)
+
 */
 
 function Square(props) {
