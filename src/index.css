@@ -1,6 +1,20 @@
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
+  background-color: #ddd;
+}
+
+div#root {
+  background-color: rgb(255, 255, 255);
+  padding: 4em;
+  border: 1px solid black;
+  border-radius: 16px;
+  box-shadow: 3px 3px 7px black;
+  position: absolute;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 5%;
+
 }
 
 ol,
@@ -124,6 +138,10 @@ button.square.border-rbl {
   background: #ddd;
 }
 
+.container {
+  text-align: center;
+}
+
 .game {
   display: flex;
   flex-direction: row;
@@ -134,8 +152,15 @@ button.square.border-rbl {
 }
 
 .game-info,
-.game-controls {
+.game-controls,
+.game-history {
   padding: 10px;
+}
+
+.game-history {
+  margin-left: 5em;
+  border: 1px solid black;
+  text-align: center
 }
 
 .control-button {
@@ -154,4 +179,13 @@ button.square.border-rbl {
   height: 50vh;
   max-height: 50vh;
   border: 0.5px solid rgb(138, 138, 138);
+}
+
+table {
+  border-collapse: collapse;
+  
+}
+
+thead tr {
+  background-color: #ddd;
 }
